@@ -34,7 +34,7 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
     return;
   }
 
-  const cookieFilePath = './src/utils/cookies.txt';
+  const cookieFilePath = './src/utils/cokies.txt';
   let cookies = '';
 
   try {
