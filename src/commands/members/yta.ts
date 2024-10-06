@@ -37,7 +37,6 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
       headers: {
         Cookie: cs,
         Authorization: authorization,
-        "x-youtube-identity-token",
       },
     },
     filter: (info) => info.audioBitrate === 160 || info.audioBitrate === 128,
