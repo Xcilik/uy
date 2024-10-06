@@ -7,19 +7,26 @@ import getRandomFileName from "../../functions/getRandomFileName";
 import { prefix } from "../../utils/constants";
 
 const readCookies = (filePath: string): string => {
-  const requiredCookies = ['LOGIN_INFO', 'SID', 'HSID', 'SAPISID', 'APISID'];
+  const requiredCookies = ['LOGIN_INFO', 'SID', 'HSID', 'SAPISID', '__Secure-1PSID', '__Secure-1PSIDCC'];
 
   const rawCookies = fs.readFileSync(filePath, 'utf-8');
   const cookiesArray = rawCookies.split('\n')
     .filter(line => line.trim() && !line.startsWith('#')) // Skip comment lines
-    .map(line => line.split('\t')[5]) // Get only the value part (index 5)
-    .filter((cookie, index) => {
-      return requiredCookies.some(req => rawCookies.split('\n')[index].includes(req));
+    .map(line => {
+      const parts = line.split('\t');
+      return {
+        name: parts[5], // Cookie name
+        value: parts[6], // Cookie value
+      };
     })
+    .filter(cookie => requiredCookies.some(req => cookie.name.includes(req))) // Filter required cookies
+    .map(cookie => `${cookie.name}=${cookie.value}`) // Format for request
     .join('; ');
 
+  console.log("Extracted Cookies:", cookiesArray); // Log to check
   return cookiesArray;
 };
+
 
 const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
   const { reply, args, from } = msgInfoObj;
