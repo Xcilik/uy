@@ -6,7 +6,7 @@ import getRandomFileName from "../../functions/getRandomFileName";
 import { prefix } from "../../utils/constants";
 import { exec } from "child_process";
 
-const downloadAudio = (url, cookies) => {
+const downloadAudio = (url: string, cookies: string): Promise<string> => {
   return new Promise((resolve, reject) => {
     const command = `yt-dlp -x --audio-format mp3 --cookies "${cookies}" -o "${getRandomFileName('.mp3')}" "${url}"`;
     
@@ -14,7 +14,7 @@ const downloadAudio = (url, cookies) => {
       if (error) {
         reject(`Error: ${stderr}`);
       } else {
-        resolve(stdout);
+        resolve(stdout.trim()); // Return the trimmed output
       }
     });
   });
@@ -34,26 +34,22 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
     return;
   }
 
-  // Read cookies from the src/utils/cookies.txt file
-  const cookieFilePath = './src/utils/cokies.txt';
+  const cookieFilePath = './src/utils/cookies.txt';
   let cookies = '';
 
-  // Read cookies
   try {
     cookies = fs.readFileSync(cookieFilePath, 'utf-8').trim();
     if (!cookies) {
       await reply(`❌ No valid cookies found in the file.`);
       return;
     }
-  } catch (err) {
+  } catch (err: any) {
     await reply(`❌ Error reading cookies: ${err.message}`);
     return;
   }
 
-  // Download audio
   try {
-    const downloadOutput = await downloadAudio(urlYt, cookies);
-    const audioFileName = downloadOutput.trim(); // Assuming yt-dlp outputs the filename
+    const audioFileName = await downloadAudio(urlYt, cookies);
 
     // Check if file exists
     if (fs.existsSync(audioFileName)) {
@@ -76,12 +72,11 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
         await reply(`❌ Cannot download! Audio size limit: 100 MB`);
       }
 
-      // Clean up the downloaded file
       fs.unlinkSync(audioFileName);
     } else {
       await reply(`❌ Error: File not found after download.`);
     }
-  } catch (err) {
+  } catch (err: any) {
     await reply(`❌ ${err}`);
   }
 };
