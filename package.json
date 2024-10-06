@@ -50,7 +50,7 @@
     "ts-node": "^10.9.1",
     "wa-sticker-formatter": "^4.4.4",
     "ytdl": "^1.4.1",
-    "ytdl-core": "github:khlevon/node-ytdl-core#v4.11.3-patch.1"
+    "ytdl-core": "github:eugabrielsilva/node-ytdl-core"
   },
   "devDependencies": {
     "@types/adm-zip": "^0.5.0",
