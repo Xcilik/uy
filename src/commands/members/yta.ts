@@ -1,3 +1,13 @@
+import { WAMessage } from "@whiskeysockets/baileys";
+import ytdl from "ytdl-core";
+import fs from "fs";
+import { MsgInfoObj } from "../../interfaces/msgInfoObj";
+import { Bot } from "../../interfaces/Bot";
+
+import getRandomFileName from "../../functions/getRandomFileName";
+import { prefix } from "../../utils/constants";
+
+
 const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
   const { reply, args, from } = msgInfoObj;
   if (args.length === 0) {
@@ -60,3 +70,13 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
 
   fs.unlinkSync(`./${randomFileName}`);
 };
+
+const yta = () => {
+  const cmd = ["yta"];
+
+  return { cmd, handler };
+};
+
+export default yta;
+
+
