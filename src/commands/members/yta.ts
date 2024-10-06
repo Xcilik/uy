@@ -24,13 +24,27 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
   const cookieFilePath = './src/utils/cokies.txt';
   let cookies = '';
 
-  try {
-    cookies = fs.readFileSync(cookieFilePath, 'utf-8');
-  } catch (err) {
-    const error = err as Error; // Type assertion
-    await reply(`❌ Error reading cookies: ${error.message}`);
+// Read cookies and format them
+try {
+  const rawCookies = fs.readFileSync(cookieFilePath, 'utf-8').trim();
+  const cookieLines = rawCookies.split('\n').filter(line => !line.startsWith('#'));
+  const cookies = cookieLines.map(line => {
+    const parts = line.split('\t');
+    return `${parts[5]}=${parts[6]}`; // Name=Value
+  }).join('; ');
+
+  // Check if cookies were extracted
+  if (!cookies) {
+    await reply(`❌ No valid cookies found in the file.`);
     return;
   }
+
+  console.log("Formatted Cookies:", cookies); // Log formatted cookies for debugging
+} catch (err) {
+  const error = err as Error; // Type assertion
+  await reply(`❌ Error reading cookies: ${error.message}`);
+  return;
+}
 
   const infoYt = await ytdl.getInfo(urlYt, {
     requestOptions: {
