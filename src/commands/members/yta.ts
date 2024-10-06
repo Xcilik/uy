@@ -31,13 +31,7 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
     return;
   }
 
-  const infoYt = await ytdl.getInfo(urlYt, {
-    requestOptions: {
-      headers: {
-        Cookie: cookies // Set the cookies in the headers
-      }
-    }
-  });
+  const infoYt = await ytdl.getInfo(urlYt, { cookie: cookies });
 
   // Check for duration limit
   if (Number(infoYt.videoDetails.lengthSeconds) >= 3600) {
@@ -50,11 +44,7 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
 
   const stream = ytdl(urlYt, {
     filter: (info) => info.audioBitrate === 160 || info.audioBitrate === 128,
-    requestOptions: {
-      headers: {
-        Cookie: cookies // Set the cookies in the headers
-      }
-    }
+    cookie: cookies // Use cookies here
   }).pipe(fs.createWriteStream(`./${randomFileName}`));
 
   console.log("Audio downloading ->", urlYt);
