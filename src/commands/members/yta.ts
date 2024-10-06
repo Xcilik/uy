@@ -46,21 +46,13 @@ try {
   return;
 }
 
-try {
-    const infoYt = await ytdl.getInfo(urlYt, {
-        requestOptions: {
-            headers: {
-                Cookie: cookies
-            }
-        }
-    });
-
-    // Process the info...
-} catch (error) {
-    console.error('Error fetching video info:', error);
-    await reply(`❌ Error fetching video information: ${error.message}`);
-    return;
-}
+  const infoYt = await ytdl.getInfo(urlYt, {
+    requestOptions: {
+      headers: {
+        Cookie: cookies // Set the cookies in the headers
+      }
+    }
+  });
 
   // Check for duration limit
   if (Number(infoYt.videoDetails.lengthSeconds) >= 3600) {
