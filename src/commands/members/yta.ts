@@ -86,7 +86,7 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
   } catch (err: any) {
     await reply(`❌ Error: ${err?.message || 'Unknown error'}`);
   }
-
+};
 
 const yta = () => {
   const cmd = ["yta"];
