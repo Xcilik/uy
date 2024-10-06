@@ -5,16 +5,23 @@ import { Bot } from "../../interfaces/Bot";
 import getRandomFileName from "../../functions/getRandomFileName";
 import { prefix } from "../../utils/constants";
 import { exec } from "child_process";
+import path from "path";
 
 const downloadAudio = (url: string, cookies: string): Promise<string> => {
   return new Promise((resolve, reject) => {
-    const command = `yt-dlp -x --audio-format mp3 --cookies "${cookies}" -o "${getRandomFileName('.mp3')}" "${url}"`;
+    const outputDir = './downloads';
+    if (!fs.existsSync(outputDir)) {
+      fs.mkdirSync(outputDir, { recursive: true });
+    }
     
+    const outputFile = path.join(outputDir, getRandomFileName('.mp3'));
+    const command = `yt-dlp -x --audio-format mp3 --cookies "${cookies}" -o "${outputFile}" "${url}"`;
+
     exec(command, (error, stdout, stderr) => {
       if (error) {
-        reject(`Error: ${stderr}`);
+        reject(`Error: ${stderr || stdout}`);
       } else {
-        resolve(stdout.trim()); // Return the trimmed output
+        resolve(outputFile);
       }
     });
   });
@@ -34,16 +41,16 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
     return;
   }
 
-  const cookieFilePath = './src/utils/cokies.txt';
+  const cookieFilePath = './src/utils/cookies.txt';
   let cookies = '';
 
   try {
-    cookies = fs.readFileSync(cookieFilePath, 'utf-8').trim();
-    if (!cookies) {
+    cookies = await fs.promises.readFile(cookieFilePath, 'utf-8');
+    if (!cookies.trim()) {
       await reply(`❌ No valid cookies found in the file.`);
       return;
     }
-  } catch (err: any) {
+  } catch (err) {
     await reply(`❌ Error reading cookies: ${err.message}`);
     return;
   }
@@ -51,7 +58,6 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
   try {
     const audioFileName = await downloadAudio(urlYt, cookies);
 
-    // Check if file exists
     if (fs.existsSync(audioFileName)) {
       const stats = fs.statSync(audioFileName);
       const fileSizeInMegabytes = stats.size / (1024 * 1024);
@@ -62,8 +68,8 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
         await bot.sendMessage(
           from,
           {
-            document: fs.readFileSync(audioFileName),
-            fileName: `${audioFileName}.mp3`,
+            document: fs.createReadStream(audioFileName),
+            fileName: path.basename(audioFileName),
             mimetype: "audio/mpeg",
           },
           { quoted: msg }
@@ -76,7 +82,7 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
     } else {
       await reply(`❌ Error: File not found after download.`);
     }
-  } catch (err: any) {
+  } catch (err) {
     await reply(`❌ ${err}`);
   }
 };
