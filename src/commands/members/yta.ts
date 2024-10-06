@@ -57,18 +57,19 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
 
   try {
     const audioFileName = await downloadAudio(urlYt, cookies);
-
+  
     if (fs.existsSync(audioFileName)) {
       const stats = fs.statSync(audioFileName);
       const fileSizeInMegabytes = stats.size / (1024 * 1024);
-
+  
       console.log(`Audio downloaded! Size: ${fileSizeInMegabytes} MB`);
-
+  
       if (fileSizeInMegabytes <= 100) {
+        const audioBuffer = fs.readFileSync(audioFileName);
         await bot.sendMessage(
           from,
           {
-            document: fs.createReadStream(audioFileName),
+            document: audioBuffer,
             fileName: path.basename(audioFileName),
             mimetype: "audio/mpeg",
           },
@@ -77,15 +78,15 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
       } else {
         await reply(`❌ Cannot download! Audio size limit: 100 MB`);
       }
-
+  
       fs.unlinkSync(audioFileName);
     } else {
       await reply(`❌ Error: File not found after download.`);
     }
-  } catch (err) {
-    await reply(`❌ ${err}`);
+  } catch (err: any) {
+    await reply(`❌ Error: ${err?.message || 'Unknown error'}`);
   }
-};
+
 
 const yta = () => {
   const cmd = ["yta"];
