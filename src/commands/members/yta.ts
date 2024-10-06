@@ -20,8 +20,8 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
     return;
   }
 
-  // Read cookies from the ytcookie folder
-  const cookieFilePath = './src/utils/cookies.txt'; // Adjust path if needed
+  // Read cookies from the src/utils/cokies.txt file
+  const cookieFilePath = './src/utils/cokies.txt'; // Adjust path if needed
   let cookies = '';
 
   try {
@@ -31,7 +31,13 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
     return;
   }
 
-  const infoYt = await ytdl.getInfo(urlYt, { cookie: cookies });
+  const infoYt = await ytdl.getInfo(urlYt, {
+    requestOptions: {
+      headers: {
+        Cookie: cookies // Set the cookies in the headers
+      }
+    }
+  });
 
   // Check for duration limit
   if (Number(infoYt.videoDetails.lengthSeconds) >= 3600) {
@@ -44,7 +50,11 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
 
   const stream = ytdl(urlYt, {
     filter: (info) => info.audioBitrate === 160 || info.audioBitrate === 128,
-    cookie: cookies // Use cookies here
+    requestOptions: {
+      headers: {
+        Cookie: cookies // Set the cookies in the headers
+      }
+    }
   }).pipe(fs.createWriteStream(`./${randomFileName}`));
 
   console.log("Audio downloading ->", urlYt);
