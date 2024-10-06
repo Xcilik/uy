@@ -27,7 +27,7 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
   }
 
   // Load cookies from a file
-  const cookies = readCookies('./path/to/your/cookies.txt');
+  const cookies = readCookies('./src/utils/cokies.txt');
 
   const infoYt = await ytdl.getInfo(urlYt, {
     requestOptions: {
