@@ -5,21 +5,13 @@ import { MsgInfoObj } from "../../interfaces/msgInfoObj";
 import { Bot } from "../../interfaces/Bot";
 import getRandomFileName from "../../functions/getRandomFileName";
 import { prefix } from "../../utils/constants";
-import { CookieJar } from 'tough-cookie';
 
-const readCookies = (filePath) => {
-  const rawCookies = fs.readFileSync(filePath, 'utf-8');
-  const cookieJar = new CookieJar();
-
-  rawCookies.split('\n').forEach(line => {
-    if (line.trim()) {
-      const [nameValue, ...attributes] = line.split(';');
-      const [name, value] = nameValue.split('=');
-      cookieJar.setCookieSync(`${name}=${value}`, 'https://www.youtube.com');
-    }
-  });
-
-  return cookieJar;
+const readCookies = (filePath: string): string => {
+  return fs.readFileSync(filePath, 'utf-8')
+    .split('\n')
+    .filter(line => line.trim())
+    .map(line => line.split(';')[0]) // Get only the name=value part
+    .join('; ');
 };
 
 const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
@@ -35,9 +27,15 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
   }
 
   // Load cookies from a file
-  const cookieJar = readCookies('./src/utils/cokies.txt');
+  const cookies = readCookies('./path/to/your/cookies.txt');
 
-  const infoYt = await ytdl.getInfo(urlYt, { cookieJar });
+  const infoYt = await ytdl.getInfo(urlYt, {
+    requestOptions: {
+      headers: {
+        Cookie: cookies,
+      },
+    },
+  });
 
   // 60 MIN
   if (Number(infoYt.videoDetails.lengthSeconds) >= 3600) {
@@ -50,7 +48,11 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
 
   const stream = ytdl(urlYt, {
     filter: (info) => info.audioBitrate === 160 || info.audioBitrate === 128,
-    cookieJar,
+    requestOptions: {
+      headers: {
+        Cookie: cookies,
+      },
+    },
   }).pipe(fs.createWriteStream(`./${randomFileName}`));
   
   console.log("Audio downloading ->", urlYt);
