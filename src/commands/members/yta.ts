@@ -7,11 +7,18 @@ import getRandomFileName from "../../functions/getRandomFileName";
 import { prefix } from "../../utils/constants";
 
 const readCookies = (filePath: string): string => {
-  return fs.readFileSync(filePath, 'utf-8')
-    .split('\n')
-    .filter(line => line.trim())
-    .map(line => line.split(';')[0]) // Get only the name=value part
+  const requiredCookies = ['LOGIN_INFO', 'SID', 'HSID', 'SAPISID', 'APISID'];
+
+  const rawCookies = fs.readFileSync(filePath, 'utf-8');
+  const cookiesArray = rawCookies.split('\n')
+    .filter(line => line.trim() && !line.startsWith('#')) // Skip comment lines
+    .map(line => line.split('\t')[5]) // Get only the value part (index 5)
+    .filter((cookie, index) => {
+      return requiredCookies.some(req => rawCookies.split('\n')[index].includes(req));
+    })
     .join('; ');
+
+  return cookiesArray;
 };
 
 const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
@@ -27,7 +34,8 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
   }
 
   // Load cookies from a file
-  const cookies = readCookies('./src/utils/cokies.txt');
+  const cookies = readCookies('./path/to/your/cookies.txt');
+  console.log("Using cookies:", cookies);
 
   const infoYt = await ytdl.getInfo(urlYt, {
     requestOptions: {
