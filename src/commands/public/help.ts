@@ -8,7 +8,7 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
   const more = String.fromCharCode(8206);
   const readMore = more.repeat(4001);
 
-  const text = `*─「 🔥 <{PVX}> BOT 🔥 」─*
+  const text = `*─「 🔥 TEKNIK INFORMATIKA 🔥 」─*
   ${readMore}
 📛 *${prefix}sticker*
 - _Create sticker from media!_
@@ -44,13 +44,13 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
   Alias: *${prefix}ta*
 
 📛 *${prefix}rank*
-  - _Know your message count & rank in all PVX groups!_
+  - _Know your message count & rank in all groups!_
   
 📛 *${prefix}ranks*
-  - _Know ranks list of PVX groups!_
+  - _Know ranks list of groups!_
 
 📛 *${prefix}count*
-  - _Know your message stats in all PVX groups!_
+  - _Know your message stats in all groups!_
   
 📛 *${prefix}ytv url*
   - _Youtube videos downloader!_
@@ -59,7 +59,7 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
   - _Youtube audio downloader!_
 
 📛 *${prefix}steal*
-  - _Change sticker name to PVX BOT!_
+  - _Change sticker name to BOT!_
 
 📛 *${prefix}song name*
   - _Get songs in good quality!_
@@ -114,18 +114,12 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
   - _Get links for all PVX groups!_
   Alias: *${prefix}link*
 
-📛 *${prefix}donation*
-  - _Get donation details and help PVX community!_
-
 📛 *${prefix}feedback*
   - _Get feedback form!_
 
 📛 *${prefix}rules*
   - _Get PVX groups rules!_
   Alias: *${prefix}r*
-
-📛 *${prefix}source*
-  - _Get bot source code!_
 
 📛 *${prefix}dev*
   - _Get dev contact to report bug or to add new feature!_
@@ -137,10 +131,7 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
   - _To get list of admin commands!_
 
 📛 *${prefix}helpo*
-  - _To get list of owner commands!_
-
-send ${prefix}source for sourcecode of BOT
-✔️ more cool commands coming...`;
+  - _To get list of owner commands!_`;
 
   await reply(text);
 };
