@@ -4,7 +4,7 @@ import { Bot } from "../../interfaces/Bot";
 
 const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
   const { reply } = msgInfoObj;
-  const text = `*─「 <{PVX}> BOT 」 ─*\n\nYES! BOT IS ALIVE !!!`;
+  const text = `*─「TEKNIK INFORMATIKA」 ─*\n\nIS ALIVE!!!`;
 
   await reply(text);
 };
