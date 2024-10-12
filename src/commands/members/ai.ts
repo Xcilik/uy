@@ -34,7 +34,7 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
       response = response.slice(0, 100) + readMore + response;
     }
 
-    await reply(`AI: ${response}`);
+    await reply(`${response}`);
   } catch (err) {
     console.log(err);
     if (err instanceof Error) {
