@@ -11,76 +11,75 @@ import { MsgInfoObj } from "../../interfaces/msgInfoObj";
 import { Bot } from "../../interfaces/Bot";
 // import { prefix } from "../../utils/constants";
 
+//const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
+  //const { reply } = msgInfoObj;
+
+  //await reply("Command temperory disabled!");
+//};
+
 const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
-  const { reply } = msgInfoObj;
 
-  await reply("Command temperory disabled!");
-};
+   const { args, reply, from } = msgInfoObj;
+   if (args.length === 0) {
+     await reply(`❌ URL is empty! \nSend ${prefix}insta url`);
+     return;
+   }
 
-// const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
+   let urlInsta = args[0];
+   if (urlInsta.includes("?")) urlInsta = urlInsta.split("/?")[0];
+   console.log(urlInsta);
 
-//   const { args, reply, from } = msgInfoObj;
-//   if (args.length === 0) {
-//     await reply(`❌ URL is empty! \nSend ${prefix}insta url`);
-//     return;
-//   }
+   try {
+     const form = {
+       url: urlInsta,
+       submit: "",
+     };
 
-//   let urlInsta = args[0];
-//   // eslint-disable-next-line prefer-destructuring
-//   if (urlInsta.includes("?")) urlInsta = urlInsta.split("/?")[0];
-//   console.log(urlInsta);
+     const { data } = await axios(`https://downloadgram.org/`, {
+       method: "POST",
+       data: form,
+     });
+     const $ = cheerio.load(data);
 
-//   try {
-//     const form = {
-//       url: urlInsta,
-//       submit: "",
-//     };
+     const directUrls: string[] = [];
 
-//     const { data } = await axios(`https://downloadgram.org/`, {
-//       method: "POST",
-//       data: form,
-//     });
-//     const $ = cheerio.load(data);
+     $("#downloadhere > a").each((a, b) => {
+       const url = $(b).attr("href");
+       if (url) directUrls.push(url);
+     });
 
-//     const directUrls: string[] = [];
+     console.log(directUrls);
 
-//     $("#downloadhere > a").each((a, b) => {
-//       const url = $(b).attr("href");
-//       if (url) directUrls.push(url);
-//     });
-
-//     console.log(directUrls);
-
-//     // async-await ERRORS are not caught inside forEach loop
-//     for (let i = 0; i < directUrls.length; i++) {
-//       const directUrl = directUrls[i];
-//       if (directUrl.includes(".mp4")) {
+     // async-await ERRORS are not caught inside forEach loop
+     for (let i = 0; i < directUrls.length; i++) {
+       const directUrl = directUrls[i];
+       if (directUrl.includes(".mp4")) {
 //         // eslint-disable-next-line no-await-in-loop
-//         await bot.sendMessage(
-//           from,
-//           {
-//             video: { url: directUrl },
-//           },
-//           { quoted: msg, mediaUploadTimeoutMs: 1000 * 60 }
-//         );
-//       } else if (directUrl.includes(".jpg")) {
-//         // eslint-disable-next-line no-await-in-loop
-//         await bot.sendMessage(
-//           from,
-//           {
-//             image: { url: directUrl },
-//           },
-//           { quoted: msg, mediaUploadTimeoutMs: 1000 * 60 }
-//         );
-//       }
-//     }
-//   } catch (err) {
-//     if (err instanceof Error) {
-//       await reply(err.toString());
-//     }
+         await bot.sendMessage(
+           from,
+           {
+             video: { url: directUrl },
+           },
+           { quoted: msg, mediaUploadTimeoutMs: 1000 * 60 }
+         );
+       } else if (directUrl.includes(".jpg")) {
+         // eslint-disable-next-line no-await-in-loop
+         await bot.sendMessage(
+           from,
+           {
+             image: { url: directUrl },
+           },
+           { quoted: msg, mediaUploadTimeoutMs: 1000 * 60 }
+         );
+       }
+     }
+   } catch (err) {
+     if (err instanceof Error) {
+       await reply(err.toString());
+     }
 //     // \n\nNote: only public insta videos can be downloaded!
-//   }
-// };
+   }
+ };
 
 const insta = () => {
   const cmd = ["insta", "i", "ig"];
