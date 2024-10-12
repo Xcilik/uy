@@ -1,15 +1,15 @@
-// let { igApi, getCookie } = require("insta-fetcher");
-// import 'dotenv/config'
-// let ig;
-// let isIgSetup = false;
+let { igApi, getCookie } = require("insta-fetcher");
+import 'dotenv/config'
+let ig;
+let isIgSetup = false;
 
 import { WAMessage } from "@whiskeysockets/baileys";
-// import axios from "axios";
-// import cheerio from "cheerio";
+import axios from "axios";
+import cheerio from "cheerio";
 import { MsgInfoObj } from "../../interfaces/msgInfoObj";
 
 import { Bot } from "../../interfaces/Bot";
-// import { prefix } from "../../utils/constants";
+import { prefix } from "../../utils/constants";
 
 //const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
   //const { reply } = msgInfoObj;
