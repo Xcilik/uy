@@ -8,7 +8,7 @@ const handler = async (bot: Bot, msg: WAMessage, msgInfoObj: MsgInfoObj) => {
   const more = String.fromCharCode(8206);
   const readMore = more.repeat(4001);
 
-  const text = `*─「 🔥 TEKNIK INFORMATIKA 🔥 」─*
+  const text = `*─「🔥TEKNIK INFORMATIKA🔥─*
   ${readMore}
 📛 *${prefix}sticker*
 - _Create sticker from media!_
