@@ -111,6 +111,7 @@ const addCommands = async () => {
     search,
     source,
     steal,
+    ai,
     votecommand,
   ];
 
@@ -158,7 +159,6 @@ const addCommands = async () => {
   });
 
   const membersCommands = [
-    ai,
     checkvote,
     count,
     fb,
