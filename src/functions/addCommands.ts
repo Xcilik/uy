@@ -1,5 +1,5 @@
 /* ----------------------------- ADMIN COMMANDS ----------------------------- */
-import add from "../commands/admins/add";
+//import add from "../commands/admins/add";
 import adminlist from "../commands/admins/adminlist";
 import blacklist from "../commands/admins/blacklist";
 import blacklistadd from "../commands/admins/blacklistadd";
@@ -32,7 +32,7 @@ import gender from "../commands/members/gender";
 import horo from "../commands/members/horo";
 import image from "../commands/members/image";
 import imagesearch from "../commands/members/imagesearch";
-import insta from "../commands/members/insta";
+// import insta from "../commands/members/insta";
 import milestone from "../commands/members/milestone";
 import movie from "../commands/members/movie";
 import pvxg from "../commands/members/pvxg";
@@ -123,7 +123,7 @@ const addCommands = async () => {
   });
 
   const adminCommands = [
-    add,
+   // add,
     adminlist,
     bday,
     blacklist,
@@ -166,7 +166,7 @@ const addCommands = async () => {
     horo,
     image,
     imagesearch,
-    insta,
+    //insta,
     milestone,
     movie,
     pvxg,
